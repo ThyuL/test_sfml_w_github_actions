@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CursorEffectConfig version="1">
+    <Trail size="42.9762" alpha="0.03" />
+    <Left color="yellow" size="56.8571" alpha="0.5" spread="1" />
+    <Right color="blue" size="20" alpha="0.5" spread="1" />
+    <Middle color="rainbow" size="20" alpha="0.5" spread="1" />
+    <Scroll color="purple" size="20" alpha="1" spread="1" />
+</CursorEffectConfig>

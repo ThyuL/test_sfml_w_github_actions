@@ -1,0 +1,1 @@
+del /f /s /q dist\*.exe && del /f /s /q resources\*.o
