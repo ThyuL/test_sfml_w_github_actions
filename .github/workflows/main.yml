@@ -54,9 +54,8 @@ jobs:
         run: |
           xcopy SFML-install\\bin dist /Y
 
-      - name: Run particle effect
-        shell: cmd
-        run: |
-          set PATH=dist;%PATH%
-          dist\my_particle_effect_SFML.exe
-
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: particle-effect-exe
+          path: dist/my_particle_effect_SFML.exe
