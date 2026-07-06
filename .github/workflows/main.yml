@@ -1,0 +1,61 @@
+name: Build and Run SFML Particle Effect (MSYS2 MinGW)
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v4
+
+      - name: Checkout SFML package manager repo
+        uses: actions/checkout@v4
+        with:
+          repository: ThyuL/sfml_package_mngr
+          path: SFML-install
+
+      - name: Install MSYS2 and MinGW
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          update: true
+          install: >-
+            mingw-w64-x86_64-gcc
+            mingw-w64-x86_64-binutils
+            mingw-w64-x86_64-crt
+            mingw-w64-x86_64-headers
+            mingw-w64-x86_64-libwinpthread-git
+            mingw-w64-x86_64-tools
+            mingw-w64-x86_64-openal
+
+      - name: Compile resource.rc
+        shell: msys2 {0}
+        run: |
+          windres resources/resource.rc -o resources/resource.o
+
+      - name: Build particle effect
+        shell: msys2 {0}
+        run: |
+          g++ -std=c++17 \
+            -I"SFML-install/include" \
+            -L"SFML-install/lib" \
+            my_particle_effect_SFML.cpp resources/resource.o \
+            -o dist/my_particle_effect_SFML.exe \
+            -lsfml-graphics -lsfml-window -lsfml-system -ldwmapi \
+            -mwindows -static-libgcc -static-libstdc++ \
+            -Wl,-Bstatic,--whole-archive -lwinpthread -Wl,--no-whole-archive
+
+      - name: Copy DLLs
+        run: |
+          xcopy SFML-install\\bin dist /Y
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: particle-effect-exe
+          path: dist/my_particle_effect_SFML.exe
